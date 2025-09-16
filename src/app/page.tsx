@@ -1,3 +1,11 @@
+import Hero from "@/components/hero";
+import Navbar from "@/components/navbar";
+
 export default function Home() {
-  return <div className="bg-red-500">Hello World</div>;
+  return (
+    <div>
+      <Navbar />
+      <Hero />
+    </div>
+  );
 }
