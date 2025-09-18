@@ -1,18 +1,13 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default auth((req) => {
-  const path = req.nextUrl.pathname;
-
-  const { auth } = req;
-  console.log(auth);
-
-  if (path.startsWith("/chat") && !auth) {
-    return NextResponse.redirect(new URL("/api/auth/signin", req.url));
-  }
+const isProtectedRoute = createRouteMatcher(["/chat"]);
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect();
 });
 
-// Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
 };

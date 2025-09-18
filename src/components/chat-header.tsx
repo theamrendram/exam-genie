@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import { Button } from "./ui/button";
-import { signOut } from "next-auth/react";
+import { SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { EllipsisVertical, Share } from "lucide-react";
 import {
   DropdownMenu,
@@ -11,9 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 const ChatHeader = () => {
-  const handleLogout = () => {
-    signOut();
-  };
 
   return (
     <div className="sticky top-0 z-20 w-full border-b border-white/10 bg-gray-900/60 backdrop-blur supports-[backdrop-filter]:bg-gray-900/50">
@@ -28,17 +24,18 @@ const ChatHeader = () => {
               Share
             </span>
           </button>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="cursor-pointer rounded-full bg-white/90 text-gray-900 hover:bg-white"
-          >
-            Logout
-          </Button>
+          <SignedOut>
+            <SignInButton />
+            <SignUpButton>
+              <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
         </div>
 
         <div className="md:hidden">
-          <MobileMenu onLogout={handleLogout} />
+          <MobileMenu />
         </div>
       </div>
     </div>
@@ -51,7 +48,7 @@ type MobileMenuProps = {
   onLogout: () => void;
 };
 
-const MobileMenu = ({ onLogout }: MobileMenuProps) => {
+const MobileMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full bg-white/90 p-2 text-gray-900 shadow hover:bg-white">
@@ -63,8 +60,15 @@ const MobileMenu = ({ onLogout }: MobileMenuProps) => {
           <Share className="h-4 w-4" />
           <span>Share</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="gap-2" onClick={onLogout}>
-          <span>Logout</span>
+        <DropdownMenuItem className="gap-2">
+          <SignedOut>
+            <SignInButton />
+            <SignUpButton>
+              <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
