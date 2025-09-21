@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   
   try {
     const response = await axios.post(
-      `${process.env.NEXT_BACKEND_URL}/api/generate`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate`,
       {
         message: inputText,
       },
