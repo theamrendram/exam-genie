@@ -15,30 +15,57 @@ type Message = {
 type ChatWindowProps = {
   messages?: Message[];
   onSend?: (text: string) => void;
+  conversationId?: number;
 };
 
-const ChatWindow = ({ messages, onSend }: ChatWindowProps) => {
+const ChatWindow = ({ messages, onSend, conversationId }: ChatWindowProps) => {
   const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleStartConversation = async () => {
+    if (!inputText.trim()) return;
+    console.log("inputText: ", inputText);
+    setIsLoading(true);
     try {
       const response = await axios.post("/api/start-conversation", {
         inputText,
       });
-      window.location.href = `/chat/${response.data.chatId}`;
+      console.log("response: ", response);
+      window.location.href = `/chat/${response.data.conversationId}`;
     } catch (error: any) {
-      console.log(error?.response?.data ?? error);
+      console.error(
+        "Error starting conversation:",
+        error?.response?.data ?? error,
+      );
+    } finally {
+      setIsLoading(false);
     }
     setInputText("");
   };
 
   const handleSend = async () => {
+    if (!inputText.trim()) return;
+
     if (onSend) {
-      onSend(inputText);
-      setInputText("");
+      setIsLoading(true);
+      try {
+        await onSend(inputText);
+        setInputText("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      } finally {
+        setIsLoading(false);
+      }
       return;
     }
     await handleStartConversation();
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
@@ -52,12 +79,26 @@ const ChatWindow = ({ messages, onSend }: ChatWindowProps) => {
               className={`flex ${item.sender === "user" ? "justify-end" : "justify-start"} p-4`}
             >
               <div
-                className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${item.sender === "user" ? "bg-white" : "text-white"}`}
+                className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${
+                  item.sender === "user"
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-white"
+                }`}
               >
-                <p>{item.message}</p>
+                <p className="whitespace-pre-wrap">{item.message}</p>
               </div>
             </div>
           ))}
+          {isLoading && (
+            <div className="flex justify-start p-4">
+              <div className="rounded-lg bg-gray-700 px-4 py-2 text-sm text-white">
+                <div className="flex items-center space-x-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+                  <span>Thinking...</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center overflow-y-auto px-4 pt-[72px] pb-[96px]">
@@ -77,18 +118,21 @@ const ChatWindow = ({ messages, onSend }: ChatWindowProps) => {
             placeholder="Ask me anything"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={isLoading}
           />
           <Button
             variant="ghost"
-            className="cursor-pointer rounded-full bg-white p-2"
+            className="cursor-pointer rounded-full bg-white p-2 disabled:opacity-50"
             onClick={handleSend}
+            disabled={isLoading || !inputText.trim()}
           >
             <Send className="h-4 w-4 text-black" />
           </Button>
         </div>
         <div className="text-center">
           <p className="text-sm text-gray-500">
-            Powered by <span className="text-blue-500">OpenAI</span>
+            Powered by <span className="text-blue-500">Gemini AI</span>
           </p>
         </div>
       </div>
