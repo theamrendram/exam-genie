@@ -46,27 +46,52 @@ const Page = () => {
   }, [chatId]);
 
   const handleSendMessage = async (message: string) => {
+    // Immediately add user message to conversation state
+    const userMessage: Message = {
+      id: Date.now(), // Temporary ID
+      content: message,
+      sender: "USER",
+      createdAt: new Date().toISOString(),
+    };
+
+    setConversation((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        messages: [...prev.messages, userMessage],
+      };
+    });
+
     try {
       const response = await axios.post("/api/chat/message", {
         message,
         conversationId: parseInt(chatId),
       });
 
-      // Update conversation with new messages
+      // Update conversation with assistant message
       setConversation((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
           messages: [
-            ...prev.messages,
-            response.data.userMessage,
-            response.data.assistantMessage,
+            ...prev.messages.filter((msg) => msg.id !== userMessage.id), // Remove temporary user message
+            response.data.userMessage, // Add actual user message from server
+            response.data.assistantMessage, // Add assistant message
           ],
         };
       });
     } catch (err: any) {
       console.error("Error sending message:", err);
       setError("Failed to send message");
+
+      // Remove the temporary user message on error
+      setConversation((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          messages: prev.messages.filter((msg) => msg.id !== userMessage.id),
+        };
+      });
     }
   };
 

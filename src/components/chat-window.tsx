@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Send } from "lucide-react";
 import ChatHeader from "./chat-header";
 import axios from "axios";
+import { formatText } from "@/lib/text-formatter";
 
 type Message = {
   id: string | number;
@@ -85,7 +86,9 @@ const ChatWindow = ({ messages, onSend, conversationId }: ChatWindowProps) => {
                     : "bg-gray-700 text-white"
                 }`}
               >
-                <p className="whitespace-pre-wrap">{item.message}</p>
+                <div className="whitespace-pre-wrap">
+                  {formatText(item.message)}
+                </div>
               </div>
             </div>
           ))}
