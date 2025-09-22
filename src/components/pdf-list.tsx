@@ -140,7 +140,7 @@ export function PDFList({
                         </Badge>
                         <Badge variant="outline" className="text-xs">
                           <GraduationCap className="mr-1 h-3 w-3" />
-                          {document.grade}
+                          {document.semester}
                         </Badge>
                         <span className="text-muted-foreground text-xs">
                           {formatFileSize(document.fileSize)}
@@ -150,12 +150,12 @@ export function PDFList({
                       <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-xs">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          <span>{formatDate(document.uploadedAt)}</span>
+                          <span>{formatDate(document.createdAt)}</span>
                         </div>
-                        <div className="flex items-center gap-1">
+                        {/* <div className="flex items-center gap-1">
                           <User className="h-3 w-3" />
                           <span>{document.uploadedBy}</span>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 

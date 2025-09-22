@@ -17,7 +17,7 @@ export async function GET() {
       );
     }
 
-    const response = await axios.get(`${API_BASE_URL}/api/pdfs`, {
+    const response = await axios.get(`${API_BASE_URL}/api/upload/pdfs`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -48,12 +48,16 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
 
-    const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
+    const response = await axios.post(
+      `${API_BASE_URL}/api/upload/pdfs`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       },
-    });
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {
@@ -85,11 +89,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const response = await axios.delete(`${API_BASE_URL}/api/pdfs/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.delete(
+      `${API_BASE_URL}/api/upload/pdfs/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {

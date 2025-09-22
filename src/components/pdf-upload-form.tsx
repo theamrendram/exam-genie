@@ -16,7 +16,7 @@ interface FormState {
   title: string;
   description: string;
   subject: string;
-  grade: string;
+  semester: string;
   file: File | null;
 }
 
@@ -25,7 +25,7 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
     title: "",
     description: "",
     subject: "",
-    grade: "",
+    semester: "",
     file: null,
   });
 
@@ -79,7 +79,7 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
       !formData.file ||
       !formData.title ||
       !formData.subject ||
-      !formData.grade
+      !formData.semester
     ) {
       alert("Please fill in all required fields and select a PDF file");
       return;
@@ -90,7 +90,7 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
     submitData.append("title", formData.title);
     submitData.append("description", formData.description);
     submitData.append("subject", formData.subject);
-    submitData.append("grade", formData.grade);
+    submitData.append("semester", formData.semester);
 
     try {
       await onUpload(submitData);
@@ -99,7 +99,7 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
         title: "",
         description: "",
         subject: "",
-        grade: "",
+        semester: "",
         file: null,
       });
     } catch (error) {
@@ -145,13 +145,13 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="grade">Grade Level *</Label>
+                <Label htmlFor="semester">Semester *</Label>
                 <Input
-                  id="grade"
-                  name="grade"
-                  value={formData.grade}
+                  id="semester"
+                  name="semester"
+                  value={formData.semester}
                   onChange={handleInputChange}
-                  placeholder="e.g., Grade 10, Class 12"
+                  placeholder="e.g., Semester 1, Semester 2"
                   required
                 />
               </div>
@@ -235,7 +235,7 @@ export function PDFUploadForm({ onUpload, isUploading }: PDFUploadFormProps) {
                 !formData.file ||
                 !formData.title ||
                 !formData.subject ||
-                !formData.grade
+                !formData.semester
               }
             >
               {isUploading ? (

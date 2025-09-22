@@ -3,10 +3,10 @@ export interface PDFDocument {
   title: string;
   description?: string;
   subject: string;
-  grade: string;
+  semester: string;
   fileName: string;
   fileSize: number;
   fileUrl: string;
-  uploadedAt: string;
-  uploadedBy: string;
+  createdAt: string;
+  // uploadedBy: string;
 }

@@ -235,7 +235,7 @@ export default function AdminDashboard() {
                       Grade Levels
                     </p>
                     <p className="text-2xl font-bold">
-                      {new Set(documents.map((doc) => doc.grade)).size}
+                      {new Set(documents.map((doc) => doc.semester)).size}
                     </p>
                   </div>
                 </div>
